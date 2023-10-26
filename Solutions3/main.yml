@@ -1,0 +1,54 @@
+- hosts: all
+  tasks:
+  - name: Install Apache on RedHat
+    yum:
+      name: httpd
+      state: latest
+    when: ansible_os_family == 'RedHat'
+
+  - name: Install apache on Debian
+    apt:
+      name: apache2
+      state: present
+    when: ansible_os_family == 'Debian'
+
+  - name: Start Apache on RedHat
+    systemd:
+      state: started
+      enabled: yes
+      name: httpd 
+    when: ansible_os_family == 'RedHat'
+
+  - name: Start Apache on Debian
+    systemd:
+      state: started
+      enabled: yes
+      name: apache2 
+    when: ansible_os_family == 'Debian'
+
+  - name: Download Template
+    get_url:
+      url: https://www.free-css.com/assets/files/free-css-templates/download/page296/finexo.zip
+      dest: /tmp/finexo.zip
+
+  - name: Install unzip
+    yum:
+      name: unzip
+      state: present
+    when: ansible_os_family == 'RedHat'
+
+  - name: Install unzip
+    apt:
+      name: unzip
+      state: present
+    when: ansible_os_family == 'Debian'
+
+  - name: Extract Template
+    unarchive:
+      src: /tmp/finexo.zip
+      dest: /tmp/
+      remote_src: yes 
+
+  - shell: mv /tmp/finexo-html/* /var/www/html/
+    args:
+      creates: /var/www/html/about.html
