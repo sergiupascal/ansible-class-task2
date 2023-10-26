@@ -1,0 +1,35 @@
+- name: Disable SELinux 
+  selinux: 
+    state: disabled 
+ 
+- name: Install Apache 
+  yum: 
+    name: httpd 
+    state: latest 
+ 
+- name: Start Apache 
+  systemd: 
+    state: started 
+    enabled: yes 
+    name: httpd  
+ 
+- name: Download Template 
+  get_url: 
+    url: https://www.free-css.com/assets/files/free-css-templates/download/page288/fiu.zip
+    dest: /tmp/fiu.zip 
+ 
+- name: Install Unzip 
+  yum: 
+    name: unzip 
+    state: latest 
+ 
+- name: Extract Template 
+  unarchive: 
+    src: /tmp/fiu.zip 
+    dest: /tmp/ 
+    remote_src: yes    
+
+- name: Move Template Files 
+  shell: mv /tmp/html/* /var/www/html/ 
+  args: 
+    creates: /var/www/html/index.html

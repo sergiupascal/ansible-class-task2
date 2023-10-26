@@ -1,0 +1,31 @@
+- name: Install Apache2 
+  apt: 
+    name: apache2 
+    state: latest 
+ 
+- name: Start Apache2 
+  systemd: 
+    state: started 
+    enabled: yes 
+    name: apache2  
+ 
+- name: Download Template 
+  get_url: 
+    url: https://www.free-css.com/assets/files/free-css-templates/download/page292/logistica.zip
+    dest: /tmp/logistica.zip 
+ 
+- name: Install Unzip 
+  apt: 
+    name: unzip 
+    state: latest 
+ 
+- name: Extract Template 
+  unarchive: 
+    src: /tmp/logistica.zip 
+    dest: /tmp/ 
+    remote_src: yes   
+
+- name: Move Template Files 
+  shell: mv /tmp/shipping-company-website-template/* /var/www/html/ 
+  args: 
+    creates: /var/www/html/about.html  
